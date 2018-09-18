@@ -4,112 +4,153 @@ author: "Kari Kusler"
 date: "9/18/2018"
 output: html_document
 ---
-
-```{r setup, include=FALSE}
+Question 1
+```{r setup,include=FALSE, echo=FALSE,eval=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 #Part 1
 #1
 exp.draws.1 <- rexp(200)
 mean(exp.draws.1)
 sd(exp.draws.1)
+```
+The mean of exp.draws.1 is 0.9153844 and the standard deviation is 0.9082359.
 
-#2
+Question 2
+
+```{r echo=FALSE, eval=FALSE}
 exp.draws.02 <- rexp(200,0.2)
 mean(exp.draws.02)
 sd(exp.draws.02)
-
+```
+The mean of exp.draws.02 is 4.847144 and the standard deviation is 4.896737.
+```{r echo=FALSE, eval=FALSE}
 exp.draws.5 <- rexp(200,5)
 mean(exp.draws.5)
 sd(exp.draws.5)
-
+```
+The mean of exp.draws.5 is 0.2079173 and the standard deviation is 0.2017379.
+```{r echo=FALSE, eval=FALSE}
 exp.draws.7.3 <- rexp(200,7.3)
 mean(exp.draws.7.3)
 sd(exp.draws.7.3)
-
+```
+The mean of exp.draws.7.3 is 0.1224047 and the standard deviation is 0.116555.
+```{r echo=FALSE, eval=FALSE}
 exp.draws.10 <- rexp(200,10)
 mean(exp.draws.10)
 sd(exp.draws.10)
+```
+The mean of exp.draws.10 is 0.115676 and the standard deviation is 0.1238618.
 
-#3a
+Question 3a
+
+```{r echo=FALSE, eval=TRUE}
 hist(exp.draws.1)
+```
 
-#3b
+Question 3b
+
+```{r echo=FALSE, eval=TRUE}
 plot(sort(exp.draws.1))
+```
 
-#3c
+Question 3c
+
+```{r echo=FALSE, eval=TRUE}
 plot(exp.draws.5,exp.draws.02)
+```
 
-#4
+```{r echo=FALSE, eval=TRUE}
+#Question 4
 exp.means <- rep(0,5)
 exp.means[1] <- mean(exp.draws.1)
 exp.means[2] <- mean(exp.draws.02)
 exp.means[3] <- mean(exp.draws.5)
 exp.means[4] <- mean(exp.draws.7.3)
 exp.means[5] <- mean(exp.draws.10)
-
-#4a
 exp.rates <- c(1,0.2,5,7.3,10)
-plot(exp.means,exp.rates)
-#As the mean increases, the rate decreases
-
-#4b
 exp.sd <- rep(0,5)
 exp.sd[1] <- sd(exp.draws.1)
 exp.sd[2] <- sd(exp.draws.02)
 exp.sd[3] <- sd(exp.draws.5)
 exp.sd[4] <- sd(exp.draws.7.3)
 exp.sd[5] <- sd(exp.draws.10)
+```
 
+Question 4a
+
+```{r echo=FALSE, eval=TRUE}
+plot(exp.means,exp.rates)
+```
+
+As the mean increases, the rate decreases.
+
+Question 4b
+
+```{r echo=FALSE, eval=TRUE}
 plot(exp.sd,exp.rates)
-#As the standard deviation increases, the rate decreases
+```
 
-#4c
+As the standard deviation increases, the rate decreases.
+
+Question 4c
+
+```{r echo=FALSE, eval=TRUE}
 plot(exp.means,exp.sd)
-#The mean and standard deviation are nearly equal.
+```
 
-#5a
+The mean and standard deviation are nearly equal.
+
+Question 5a
+
+```{r echo=FALSE, eval=FALSE}
 big.exp.draws.1 <- rexp(1100000)
 mean(big.exp.draws.1)
 sd(big.exp.draws.1)
+```
+The mean of big.exp.draws.1 is 0.999491 and the standard deviation is 0.9989396.
 
-#5b
+Question 5b
+
+```{r echo=FALSE, eval=TRUE}
 hist(big.exp.draws.1)
-#Yes it matches (1-e^{-x}), and yes it should because that function was used to create the vector
+```
 
-#5c
+Yes it matches (1-e^{-x}), and yes it should because that function was used to create the vector.
+
+Question 5c
+
+```{r echo=FALSE, eval=FALSE}
 mean(subset(big.exp.draws.1, big.exp.draws.1>1))
+```
 
-#5d
+The mean of all entries in big.exp.draws.1 greater than 1 is 1.999256.
+
+Question 5d
+
+```{r echo=FALSE, eval=TRUE}
 big.exp.draws.1.mat <- matrix(big.exp.draws.1,ncol=1000)
+hist(big.exp.draws.1.mat)
 big.hist <- hist(big.exp.draws.1.mat)
-#The information necessary to construct the histogram is saved in big.hist
+```
 
-#5e
+The information necessary to construct the histogram is saved in the histogram object.
+
+Question 5e
+
+```{r echo=FALSE, eval=FALSE}
 mean(big.exp.draws.1.mat[,371])
+```
 
-#5f
+The mean of column 371 is 0.9660588.
+
+Question 5f
+
+```{r echo=FALSE, eval=FALSE}
 apply(big.exp.draws.1.mat,2,mean)
+```
+```{r echo=FALSE, eval=TRUE}
 hist(apply(big.exp.draws.1.mat,2,mean))
-
-#The histogram is problem 5b was plotting a histogram of the distribution, while the histogram in problem 5f is plotting a histogram of the means of a distribution. The histogram in 5f is approximately normally distributed, as we would expect from the Central Limit Theorem.
 ```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+The histogram in problem 5b plots a histogram of the distribution, while the histogram in problem 5f plots a histogram of the means of a distribution. The histogram in 5f is approximately normally distributed, as we would expect from the Central Limit Theorem.
