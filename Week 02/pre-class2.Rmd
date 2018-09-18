@@ -40,6 +40,32 @@ plot(sort(exp.draws.1))
 plot(exp.draws.5,exp.draws.02)
 
 #4
+exp.means <- rep(0,5)
+exp.means[1] <- mean(exp.draws.1)
+exp.means[2] <- mean(exp.draws.02)
+exp.means[3] <- mean(exp.draws.5)
+exp.means[4] <- mean(exp.draws.7.3)
+exp.means[5] <- mean(exp.draws.10)
+
+#4a
+exp.rates <- c(1,0.2,5,7.3,10)
+plot(exp.means,exp.rates)
+#As the mean increases, the rate decreases
+
+#4b
+exp.sd <- rep(0,5)
+exp.sd[1] <- sd(exp.draws.1)
+exp.sd[2] <- sd(exp.draws.02)
+exp.sd[3] <- sd(exp.draws.5)
+exp.sd[4] <- sd(exp.draws.7.3)
+exp.sd[5] <- sd(exp.draws.10)
+
+plot(exp.sd,exp.rates)
+#As the standard deviation increases, the rate decreases
+
+#4c
+plot(exp.means,exp.sd)
+#The mean and standard deviation are nearly equal.
 
 ```
 
