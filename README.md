@@ -6,6 +6,6 @@ This folder will be where you complete your pre-class each week. The first time 
 Before you continue, Edit this document with:
 
 
-- Preferred Name: _________________________________
-- Brown Name: ___________________________
-- Brown E-mail: ______________________
+- Preferred Name: _Kari________________________________
+- Brown Name: Kari Kusler ___________________________
+- Brown E-mail: kari_kusler@brown.edu______________________
