@@ -1,79 +1,173 @@
+---
+title: "Pre-class work (week 3)"
+author: "Kari Kusler"
+date: "9/26/2018"
+output: pdf_document
+---
 
+```{r setup, include = FALSE, cache = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(warning=FALSE)
+knitr::opts_chunk$set(message=FALSE)
+knitr::opts_chunk$set(cache=TRUE)
+knitr::opts_chunk$set(collapse=TRUE)
+```
 
 ## Getting Started
 We will work with the dataset called gapminder, this is a cleaned up version from Gapminder Data. Gapminder contains a lot of great data on all of the nations of the world. We first need to install the gapminder package in R.
-```{r}
-install.packages("gapminder")
+```{r part1, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+#install.packages("gapminder")
 library(dplyr)
 library(gapminder)
 gapminder = gapminder # dataset is called gapminder
+#to use kable to make tables look nice
+library(knitr)
 ```
 
 1. How many unique countries are represented per continent?
-```{r}
-
-
+```{r q1, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+#Question 1
+#removing extraneous information
+cntry.cont <- gapminder[,1:2]
+distinct <- distinct(cntry.cont)
+#grouping by continent and counting number of countries
+cntry.per.cont <- distinct %>%
+  group_by(continent) %>%
+  summarise(countries=n())
+#printing output
+kable(cntry.per.cont,format="markdown")
 ```
-
 
 2. Which European nation had the lowest GDP per capita in 1997?
-```{r}
-
-
+```{r q2, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+#Question 2
+#filtering to Europe and 1997
+lowgdp <- gapminder %>%
+  filter(continent == 'Europe' & year == '1997') %>%
+arrange(gdpPercap) %>%
+  head(1)
+kable(lowgdp[1,1],format="markdown")
 ```
-
 
 3. According to the data available, what was the average life expectancy across each continent in the 1980s?
-```{r}
+```{r q3, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+#Question 3
+#filter to include only years of interest, group by continent, and summarize mean life expectancy
+lifeexp <- gapminder %>%
+  filter(year >= 1980 & year < 1990) %>%
+  group_by(continent) %>%
+  summarize("avg" = mean(lifeExp))
 
-
+#round to one decimal point
+lifeexp[,2] <- round(lifeexp[,2],1)
+colnames(lifeexp)<-c("Continent","Mean Life Expectancy")
+kable(lifeexp,format="markdown")
 ```
-
 
 4. What 5 countries have the highest total GDP over all years combined?
-```{r}
-
-
+```{r q4, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+#Question 4
+#group by country, summarize gdp for all years, and sort by descending gdp
+high.gdp <- gapminder %>%
+  group_by(country) %>%
+  summarize(total.gdp = sum(gdpPercap)) %>%
+  arrange(desc(total.gdp))
+colnames(high.gdp) <- c("Country","Total GDP per Capita")
+kable(high.gdp[1:5,],format="markdown")
 ```
-
 
 5. What countries and years had life expectancies of at least 80 years? N.b. only output the columns of interest: country, life expectancy and year (in that order).
-```{r}
+```{r q5, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+#Question 5
+#filter by life expenctancy at least 80 and only keep columns of interest
+oldlife <- gapminder %>%
+  filter(lifeExp >= 80) %>%
+  select(country, lifeExp, year)
 
-
+colnames(oldlife) <- c("Country","Life expectancy (years)","Year")
+kable(oldlife,format="markdown")
 ```
-
 
 6. What 10 countries have the strongest correlation (in either direction) between life expectancy and per capita GDP?
-```{r}
+```{r q6, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+#Question 6
+life.gdp.cor <- gapminder %>%
+  group_by(country)  %>%
+  summarize(correlation=cor(lifeExp,gdpPercap)) %>%
+  arrange(desc(abs(correlation)))
 
-
+kable(life.gdp.cor[1:10,],format="markdown")
 ```
-
 
 7.  Which combinations of continent (besides Asia) and year have the highest average population across all countries? N.b. your output should include all results sorted by highest average population. With what you already know, this one may stump you. See this Q&A for how to ungroup before arrangeing. This also behaves differently in more recent versions of dplyr.
-```{r}
+```{r q7, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+#Question 7
+#remove Asia, group by continent and year, find average population, and arrange results
+highpop <- gapminder %>%
+  filter(continent != "Asia") %>%
+  group_by(continent,year) %>%
+  summarize(avgpop = mean(pop)) %>%
+  arrange(desc(avgpop))
 
-  
+kable(highpop,format="markdown")
 ```
-
+The Americas in 2007 had the highest average population.
 
 8.  Which three countries have had the most consistent population estimates (i.e. lowest standard deviation) across the years of available data?
-```{r}
+```{r q8, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+#Question 8
+# grouped by country, calculated SD, arrange by descending SD, printed top 3
+lowsd <- gapminder %>%
+  group_by(country) %>%
+  summarize(sd = sd(pop)) %>%
+  arrange(desc(sd))
 
-
+kable(lowsd[1:3,],format="markdown")
 ```
 
 
 9.  Subset gm to only include observations from 1992 and store the results as gm1992. What kind of object is this?
-```{r}
-
-
+```{r q9, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+#Question 9
+gm1992 <- gapminder %>%
+  filter(year==1992)
+  typeof(gm1992)
 ```
-
+The gm1992 object is a list
 
 10.  Which observations indicate that the population of a country has decreased from the previous year and the life expectancy has increased from the previous year? See the vignette on window functions.
-```{r}
-
-
+```{r q10, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+#Question 10
+#arrange by country and year, group by country, and use lag functions to compare observations to previous observations
+gap <- gapminder %>%
+  arrange(country,year) %>%
+group_by(country) %>%
+filter(pop < lag(pop) & lifeExp > lag(lifeExp))
+kable(gap,format="markdown")
 ```
+
+R code:
+```{r part1, echo=TRUE, eval=FALSE}
+```
+```{r q1, echo=TRUE, eval=FALSE}
+```
+```{r q2, echo=TRUE, eval=FALSE}
+```
+```{r q3, echo=TRUE, eval=FALSE}
+```
+```{r q4, echo=TRUE, eval=FALSE}
+```
+```{r q5, echo=TRUE, eval=FALSE}
+```
+```{r q6, echo=TRUE, eval=FALSE}
+```
+```{r q7, echo=TRUE, eval=FALSE}
+```
+```{r q8, echo=TRUE, eval=FALSE}
+```
+```{r q9, echo=TRUE, eval=FALSE}
+```
+```{r q10, echo=TRUE, eval=FALSE}
+```
+
