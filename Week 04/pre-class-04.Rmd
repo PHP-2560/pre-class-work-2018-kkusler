@@ -10,19 +10,63 @@ Make sure you commit this often with meaningful messages.
 
 Using a loop, print the integers from 1 to 50. 
 
+```{r}
+for (i in 1:50) {
+  print(i)
+  i = i+1
+}
+```
+
 ### Question 2:
 
 A.  Using a loop, add all the integers between 0 and 1000.
+```{r}
+#initiatize sum to 0;
+sum = 0;
+#now add
+for (i in 1:1000) {
+  sum = sum+i
+  if (i == 1000) {
+    print(sum)
+  }
+  i = i+1
+}
+```
+
 
 B. Now, add all the EVEN integers between 0 and 1000 (hint: use seq())
+```{r}
+for (i in 0:1000) {
+  sum = sum+i
+  if (i==1000) {
+    print(sum)
+  }
+  i = i+2
+}
+
+```
+
 
 C. Now, repeat A and B WITHOUT using a loop.
+```{r}
+#repeating A
+all <- seq(from=0, to=1000, by=1)
+#summing vector
+sum(all)
+
+#repeating B
+#making vector with even integers
+even <- seq(from=0, to=1000, by=2)
+#summing vector
+sum(even)
+```
+
 
 ### Question 3:
 
 Here is a dataframe of survey data containing 5 questions :
 
-```{r, eval=FALSE}
+```{r}
 survey <- data.frame(
                      "participant" = c(1, 2, 3, 4, 5, 6),
                      "q1" = c(5, 3, 2, 7, 11, 0),
@@ -35,5 +79,35 @@ survey <- data.frame(
 The response to each question should be an integer between 1 and 5. Obviously, we have some bad values in the dataframe. The goal of this problem is to fix them.
 
 A. Using a loop, create a new dataframe called survey.clean where all the invalid values (those that are not integers between 1 and 5) are set to NA.
+```{r}
+#first copy dataframe to new dataframe
+survey.clean <- survey
+
+#now clean it
+for (i in 1:6) {
+  for (j in 2:6 ){
+  if (survey[i,j] <1 | survey[i,j] >5) {
+    survey.clean[i,j] = NA
+  } else {
+    survey.clean[i,j] = survey[i,j]
+}
+  }
+}
+```
+
 
 B. Now, again using a loop, add a new column to the dataframe called “invalid.answers” that indicates, for each participant, how many bad answers they gave.
+```{r}
+#creating new column
+survey.clean$invalid.answers
+
+#adding number of NA values in each row
+for (i in 1:6) {
+  for (j in 2:6 ) {
+    if (is.na(survey.clean[i,j]) == TRUE) {
+      survey.clean[i,7] = survey.clean[i,7] + 1
+    }
+    }
+  }
+```
+
