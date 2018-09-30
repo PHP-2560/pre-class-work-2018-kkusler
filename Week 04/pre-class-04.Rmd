@@ -99,7 +99,7 @@ for (i in 1:6) {
 B. Now, again using a loop, add a new column to the dataframe called “invalid.answers” that indicates, for each participant, how many bad answers they gave.
 ```{r}
 #creating new column
-survey.clean$invalid.answers
+survey.clean$invalid.answers <- rep(0)
 
 #adding number of NA values in each row
 for (i in 1:6) {
