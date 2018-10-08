@@ -1,0 +1,179 @@
+# pre-class
+
+
+Make sure you commit this often with meaningful messages. 
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+
+
+
+
+
+Standardizing a variable means subtracting the mean, and then dividing by the standard deviation. Let’s use a loop to standardize the numeric columns in the [Western Collaborative Group Study](https://clinicaltrials.gov/ct2/show/NCT00005174). This study began in 1960 with 3154 men ages 39-59, who were employed in one of 11 California based companies. They were followed until 1969 during this time, 257 of these men developed coronary heart disease (CHD). You can read this data in with the code below. You can access this dataset with the following code:
+
+```{R}
+
+suppressMessages(library(foreign))
+wcgs <- read.dta("https://drive.google.com/uc?export=download&id=0B8CsRLdwqzbzYWxfN3ExQllBQkU")
+```
+
+The data has the following variables:
+
+
+
+WCGS has the following variables:
+
+-----------------------------------------------------------
+Name    Description
+------- -------------------------------------------
+id      Subject identification number
+
+age     Age in years
+
+height  Height in inches
+
+weight  Weight in lbs.
+
+sbp     Systolic blood pressure in mm 
+
+dbp     Diastolic blood pressure in mm Hg
+
+chol    Fasting serum cholesterol in mm 
+
+behpat  Behavior
+
+  1       A1
+
+  2       A2
+
+  3       B3
+
+  4       B4
+
+ncigs   Cigarettes per day
+
+dibpat  Behavior
+
+1       type A
+
+2       type B
+
+chd69   Coronary heart disease
+
+1       Yes
+
+0       no
+
+typechd Type of CHD
+
+1       myocardial infarction or death
+
+2       silent myocardial infarction
+
+3       angina perctoris
+
+time169 Time of CHD event or end of follow-up
+
+arcus   Arcus senilis
+
+0       absent
+
+1       present
+
+bmi     Body Mass Index
+-----------------------------------------------------------
+
+
+
+
+### Question 1: Standardize Function
+
+A. Create a function called standardize.me() that takes a numeric vector as an argument, and returns the standardized version of the vector. 
+B. Assign all the numeric columns of the original WCGS dataset to a new dataset called WCGS.new.
+C. Using a loop and your new function, standardize all the variables WCGS.new dataset.
+D. What should the mean and standard deviation of all your new standardized variables be? Test your prediction by running a loop
+
+```{r}
+#part A
+standardize.me <- function(x) {
+ (x-mean(x))/sd(x)
+}
+
+#part B
+WCGS.new <- wcgs
+
+for (i in 1:length(wcgs)) {
+  if (is.numeric(wcgs[,i]) == TRUE) {
+  WCGS.new[,i] <- wcgs[,i]
+  } else {
+  WCGS.new[,i] <- NA
+}
+}
+
+#part C
+for (i in 1:length(WCGS.new)) {
+  WCGS.new[,i] <- standardize.me(WCGS.new[,i])
+}
+
+#part D
+#The mean should be 0 and the standard deviation should be 1.
+
+mean <- vector()
+sd <- vector()
+
+for (i in 1:length(WCGS.new)) {
+ mean[i] <- mean(WCGS.new[,i],na.rm=TRUE)
+ sd[i]   <-   sd(WCGS.new[,i],na.rm=TRUE)
+}
+print(mean)
+print(sd)
+#The mean is not exactly 0 because we are using floating point numbers, but it is close.
+#The standard deviation is 1.
+```
+
+
+### Question 2: Looping to Calculate
+
+A. Using a loop, calculate the mean weight of the subjects separated by the type of CHD they have.
+B. Now do the same thing, but now don’t use a loop
+```{r}
+#Part A
+#subsetting by type of CHD
+no.CHD <- subset(wcgs,typchd69=="no CHD")
+MI.SD <- subset(wcgs,typchd69=="MI or SD")
+silent.MI <- subset(wcgs,typchd69=="silent MI")
+angina <- subset(wcgs,typchd69=="angina")
+
+#putting weights by CHD type into a list
+weights <- list()
+weights$no.CHD <- no.CHD$weight
+weights$MI.SD <- MI.SD$weight
+weights$silent.MI <- silent.MI$weight
+weights$angina <- angina$weight
+
+#making a vector to store results
+means <- vector()
+
+#finding means using a loop
+for (i in 1:length(weights)) {
+  means[i] <- mean(weights[[i]])
+}
+
+#printing out results
+print(means)
+
+#Part B
+library(dplyr)
+#using dyplyr to group by type of CHD and then summarize the means
+wcgs %>%
+  group_by(typchd69) %>%
+    summarize(mean = mean(weight))
+```
+
