@@ -36,17 +36,15 @@ html_session("https://money.cnn.com/data/us_markets/")
 3. Extract all of the sector names from the “Stock Sectors” table (bottom left of the web page.)
 ```{r 3, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
 library(XML)
-
-html_table(html_nodes(webpage, "table"))[[2]]
-
-html_nodes(webpage, "a[href*='Stock Sectors']")
-?html_text(html_nodes(webpage, "a[href*='sectors']"))
-
-html_text(html_nodes(webpage, "a[href*='sectors']"))
-
+sector <- html_table(html_nodes(webpage, "table"))[[2]]
+sector
 ```
 
 4. Extract all of the “3 Month % Change” values from the “Stock Sectors” table.
+```{r 4, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+df1$`3 Month % Change`
+```
+
 5. Extract the table “What’s Moving” (top middle of the web page) into a data-frame.
 6. Re-construct all of the links from the first column of the “What’s Moving” table.
 Hint: the base URL is “https://money.cnn.com”
