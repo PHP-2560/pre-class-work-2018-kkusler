@@ -10,7 +10,14 @@ title: "Basic Webscraping"
     margin-right:10%;
 }
 </style>
-```{r,setup, echo=FALSE, cache=TRUE}
+```{r setup, include = FALSE, cache = TRUE}
+options(scipen = 3, digits = 3)
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(error = TRUE)
+knitr::opts_chunk$set(warning=FALSE)
+knitr::opts_chunk$set(message=FALSE)
+knitr::opts_chunk$set(cache=T)
+knitr::opts_chunk$set(collapse=T)
 ## numbers >= 10^5 will be denoted in scientific notation,
 ## and rounded to 2 digits
 options(scipen = 3, digits = 3)
@@ -21,13 +28,12 @@ options(scipen = 3, digits = 3)
 ## Exercises
 
 1. Read the HTML content of the following URL with a variable called webpage: https://money.cnn.com/data/us_markets/ At this point, it will also be useful to open this web page in your browser.
+
 ```{r 1, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
 library(rvest)
 library(knitr)
 webpage <- read_html("https://money.cnn.com/data/us_markets/")
 ```
-
-
 
 2. Get the session details (status, type, size) of the above mentioned URL.
 ```{r 2, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
@@ -66,6 +72,24 @@ kable(titles,format="markdown")
 ```
 8. To understand the structure of the data in a web page, it is often useful to know what the underlying attributes are of the text you see.
 Extract the attributes (and their values) of the HTML element that holds the timestamp underneath the “What’s Moving” table.
+```{r 8, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+whatsmoving <- page %>%
+  html_nodes(".wsod_disclaimer>span" )%>%
+  html_attrs()
+
+whatsmoving[[1]]
+```
+
 9. Extract the values of the blue percentage-bars from the “Trending Tickers” table (bottom right of the web page.)
 Hint: in this case, the values are stored under the “class” attribute.
+```{r 9, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+pctbar <- webpage %>% html_nodes(".scale div") %>% html_attr("class")
+pctbar <- as.data.frame(pctbar)
+kable(pctbar,format="markdown")
+```
 10. Get the links of all of the “svg” images on the web page.
+```{r 10, echo=FALSE, message=FALSE, warning=FALSE, error=FALSE}
+links <- webpage %>% html_nodes("img[src$='svg']") %>% html_attr("src")
+links <- as.data.frame(links)
+kable(links,format="markdown")
+```
