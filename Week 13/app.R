@@ -3,14 +3,16 @@ ui <- fluidPage(
   titlePanel("P-value from z score"),
   sidebarLayout(
     sidebarPanel(
-      numericInput("z","Z score",0)
+      numericInput("input","Z score",value=0),
+      actionButton("button","Run"),
+      width = 2
     ),
     mainPanel("p-value",
-              textOutput("P-value"))
+              output <- textOutput("PValue"))
 )
 )
-server <- function(z)
-{output <- 2*pnorm(-abs(z))
-  return(output)
+server <- function(input, output)
+{output$PValue <- 2*pnorm(-abs(input))
+  renderText(output$PValue)
 }
 shinyApp(ui = ui, server = server)
