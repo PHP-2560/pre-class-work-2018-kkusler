@@ -12,7 +12,8 @@ ui <- fluidPage(
 )
 )
 server <- function(input, output)
-{output$PValue <- 2*pnorm(-abs(input))
-  renderText(output$PValue)
+{output$PValue <- renderText(
+  {2*pnorm(-abs(Input)$Input)
+  })
 }
 shinyApp(ui = ui, server = server)
